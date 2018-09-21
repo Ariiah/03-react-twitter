@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './Feed.css';
 import FeedItem from './FeedItem';
+import Grid from '@material-ui/core/Grid';
+
+
 class Feed extends Component {
     constructor(props) {
         super(props);
@@ -14,6 +17,10 @@ class Feed extends Component {
         const response = await fetch('/api/messages');
         if(response.status === 200 ){
             const data = await response.json();
+            let messages = data.messages;
+            messages.sort(function(a, b){
+                return a.timestamp > b.timestamp;
+            });
             this.setState({items: data.messages})
         }
         else {
@@ -36,11 +43,11 @@ class Feed extends Component {
         return (
             <div className="App">
                 <h1 className="App-title">React Twitter Feed</h1>
-                <div className="feed">
+                <Grid container className="feed">
                     {items.map((item, i) => {
                         return (<FeedItem item={item}/>)
                     })}
-                </div>
+                </Grid>
             </div>
         );
     }
