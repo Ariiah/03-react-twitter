@@ -19,7 +19,7 @@ class Feed extends Component {
             const data = await response.json();
             let messages = data.messages;
             messages.sort(function(a, b){
-                return a.timestamp > b.timestamp;
+                return a.timestamp < b.timestamp;
             });
             this.setState({items: data.messages})
         }
