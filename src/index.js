@@ -1,25 +1,33 @@
-import React, { Component } from 'react';
+/* eslint-disable react/jsx-filename-extension */
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import routes from './routes';
-import registerServiceWorker from './registerServiceWorker';
 import './index.css';
+import registerServiceWorker from './registerServiceWorker';
+import routes from './routes';
+import configureStore from './configureStore';
+import { loadMessages } from './actions/messageActions';
 
-class AppContainer extends Component {
-  render() {
-    return (
-      <MuiThemeProvider>
+const { persistor, store } = configureStore();
+store.dispatch(loadMessages());
+
+const AppContainer = () => (
+  <MuiThemeProvider>
+    <Provider store={store}>
+      <PersistGate loading={ null } persistor={ persistor }>
         <BrowserRouter>
           <div>
             {routes}
           </div>
         </BrowserRouter>
-      </MuiThemeProvider>
-    )
-  }
-}
+      </PersistGate>
+    </Provider>
+  </MuiThemeProvider>
+);
 
 ReactDOM.render(<AppContainer />, document.getElementById('root'));
 registerServiceWorker();
